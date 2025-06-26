@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "es2020", /* Modern Node.js (Node 14+); revert to es2016 if needed */
+    "module": "commonjs", /* For Node.js/Express */
+    "rootDir": "./src", /* All .ts files in src */
+    "esModuleInterop": true, /* Simplifies CommonJS imports */
+    "forceConsistentCasingInFileNames": true, /* Prevents case-sensitivity issues */
+    "resolveJsonModule": true, /* Allows JSON imports if needed */
+    "sourceMap": true, /* Improves debugging */
+    "noEmitOnError": true, /* Prevents emitting bad code */
+    /* Type Checking */
+    "strict": true, /* Enables strict type checking */
+    "noUnusedLocals": true, /* Catches unused variables */
+    "noUnusedParameters": true, /* Catches unused parameters */
+    "skipLibCheck": true /* Speeds up compilation */
+  },
+  "include": ["src/**/*"], /* Only compile src */
+  "exclude": ["node_modules"] /* Ignore node_modules */
+}
