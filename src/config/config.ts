@@ -6,7 +6,7 @@ interface Config{
 }
 
 const config: Config= {
-    port : Number(process.env.PORT) || 2313
+    port : Number(process.env.PORT) || 6122
 }
 
 export default config
