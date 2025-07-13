@@ -1,7 +1,7 @@
 import { Request, Response} from 'express'
 import { CreateResponse } from '../utils/response'
 
-// import { send_sms } from '../services/sendsms';
+// import { send_sms } from '../services/sms';
 
 // const getDeviceNotificationReceivers = async (id) => {
 //     const device = await Device.find(id)
