@@ -11,7 +11,7 @@ export function validateEmail (email: string): boolean {
 }
 
 export function generateOTPExpiryDate (hours: number) {
-  return new Date(Date.now() + hours * 1000);
+  return new Date(Date.now() + hours * 60 * 60* 1000);
 };
 
 module.exports = {

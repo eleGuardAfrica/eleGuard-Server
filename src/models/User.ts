@@ -8,17 +8,9 @@ export interface IUser extends Document {
   password: string
   phoneNumber: number
   isAdmin: boolean
-  isSuperAdmin?: boolean
   createdBy?: Types.ObjectId
   createdUsers?: Types.ObjectId[]
-  deviceId?: Types.ObjectId
-  invitationOTP?: string
-  invitationExpiry?: Date
-  isVerified: boolean
-  refreshTokens: string[]
-  lastLogin?: Date
-  createdAt: Date
-  updatedAt: Date
+  refreshTokens?: string[]
   comparePassword(candidatePassword: string): Promise<boolean>
 }
 
@@ -57,10 +49,6 @@ const UserSchema = new Schema<IUser>(
       type: Boolean,
       default: false,
     },
-    isSuperAdmin: {
-      type: Boolean,
-      default: false,
-    },
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -72,23 +60,11 @@ const UserSchema = new Schema<IUser>(
         ref: "User",
       },
     ],
-    deviceId: {
-      type: Schema.Types.ObjectId,
-      ref: "Device",
-    },
-    invitationOTP: String,
-    invitationExpiry: Date,
-    isVerified: {
-      type: Boolean,
-      default: false,
-      index: true,
-    },
     refreshTokens: [
       {
         type: String,
       },
     ],
-    lastLogin: Date,
   },
   {
     timestamps: true,
