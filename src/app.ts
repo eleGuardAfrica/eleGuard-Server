@@ -19,6 +19,7 @@ app.use(cors());
 alertRoutes(app);
 userRoutes(app);
 invitationRoutes(app);
+alertRoutes(app);
 
 app.get('/ping', (_req: Request, res:Response) => {
     res.send("Pong");

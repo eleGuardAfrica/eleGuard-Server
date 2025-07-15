@@ -11,8 +11,6 @@ export interface IAlert extends Document {
   acknowledged: boolean;
   acknowledgedBy?: Types.ObjectId;
   acknowledgedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 const AlertSchema = new Schema<IAlert>(
