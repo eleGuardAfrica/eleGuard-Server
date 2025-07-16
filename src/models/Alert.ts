@@ -1,7 +1,7 @@
 import mongoose, { Schema, type Document, Types } from "mongoose"
 
 export interface IAlert extends Document {
-  deviceId: Types.ObjectId;
+  serialNumber: string;
   customerId?: Types.ObjectId;
   type: "intrusion" | "low_battery" | "device_offline" | "maintenance";
   severity: "low" | "medium" | "high" | "critical";
@@ -15,12 +15,15 @@ export interface IAlert extends Document {
 
 const AlertSchema = new Schema<IAlert>(
   {
-    deviceId: {
-      type: Schema.Types.ObjectId,
-      ref: "Device",
-      required: [true, "Device ID is required"],
+    serialNumber: {
+      type: String,
+      required: [true, "Serial number is required"],
+      unique: true,
+      trim: true,
+      uppercase: true,
       index: true,
-    },
+    }
+    ,
     customerId: {
       type: Schema.Types.ObjectId,
       ref: "Customer",

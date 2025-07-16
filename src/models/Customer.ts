@@ -6,6 +6,7 @@ export interface ICustomer extends Document {
   phoneNumber: string
   location: string
   devices: Types.ObjectId[]
+  alerts: string[]
   createdAt: Date
   updatedAt: Date
 }
@@ -44,6 +45,14 @@ const CustomerSchema = new Schema<ICustomer>(
       {
         type: Schema.Types.ObjectId,
         ref: "Device",
+      },
+    ],
+    alerts: [
+      {
+        type: String,
+        trim: true,
+        maxlength: [500, "Alert cannot exceed 500 characters"],
+        index: true,
       },
     ],
   },

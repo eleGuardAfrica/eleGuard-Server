@@ -2,6 +2,7 @@ import { Request, Response} from 'express';
 import { CreateResponse } from '../utils/response';
 import Alert from '../models/Alert';
 import Device from '../models/Device';
+import Customer from '../models/Customer';
 
 // import { send_sms } from '../services/sms';
 
@@ -22,15 +23,31 @@ import Device from '../models/Device';
 //   acknowledgedAt?: Date;
 
 
-export const receiveAlert = async (req: Request, res: Response) : Promise<Response> => {
+
+export const postAlert = async (req: Request, res: Response) : Promise<Response> => {
    try{
-        const { deviceId, type, severity, message, location, timestamp, acknowledged } = req.params;
+        const { serialNumber, type, severity, message, location} = req.body;
 
-        const device = Device.findOne({deviceId});
+        const device = await Device.findOne({serialNumber});
+        if (!device) {
+            return res.json(CreateResponse(false, null, `Device with id ${serialNumber} not found`));
+        }
+        const customerId = device.customerId;
+        const customer_alert_updated = await Customer.findOneAndUpdate({_id: customerId}, {$push: {alerts: serialNumber}});
+        if (!customer_alert_updated) {
+            return res.json(CreateResponse(false, null, "Failed to update customer alerts"));
+        }
 
+        const saved = await Alert.create({serialNumber, customerId, type, severity, message, location});
+
+        if (!saved) {
+            return res.json(CreateResponse(false, null, "Failed to save alert"));
+        }
+
+        //Handle Alerting
         //Will send an sms when fully configured
         //send_sms(`Alert on device ${deviceId}`, getDeviceNotificationReceivers(deviceId))
-        return res.json(CreateResponse(true, `device ${deviceId} is sending an Alert`));
+        return res.json(CreateResponse(true, `device ${serialNumber} is sending an Alert`));
     }catch(error){
         return res.json(CreateResponse(false, null, error))
     }
@@ -62,5 +79,31 @@ export const getRecentAlerts = async (req:Request, res:Response): Promise<Respon
         return res.json(CreateResponse(true, alerts));
     }catch (err){
         return res.json(CreateResponse(false, null, err instanceof Error ? err.message : String(err)));
+    }
+}
+
+export const getCustomerAlerts = async (req: Request, res: Response): Promise<Response> => {
+    try{
+        const { customerId } = req.params;
+        const customer_alerts = await Customer.findOne({_id: customerId}).select("alerts");
+        if (!customer_alerts) {
+            return res.json(CreateResponse(false, null, `Customer with id ${customerId} not found`));
+        }
+        return res.json(CreateResponse(true, customer_alerts));
+    }catch (error){
+        return res.json(CreateResponse(false, null, error));
+    }
+}
+
+export const getDeviceAlerts = async (req: Request, res: Response): Promise<Response> => {
+    try{
+        const { deviceId } = req.params;
+        const device_alerts = await Device.findOne({_id: deviceId}).select("alerts");
+        if (!device_alerts) {
+            return res.json(CreateResponse(false, null, `Device with id ${deviceId} not found`));
+        }
+        return res.json(CreateResponse(true, device_alerts));
+    }catch (error){
+        return res.json(CreateResponse(false, null, error));
     }
 }
