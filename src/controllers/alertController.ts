@@ -4,7 +4,7 @@ import Alert from '../models/Alert';
 import Device from '../models/Device';
 import Customer from '../models/Customer';
 
-// import { send_sms } from '../services/sms';
+import { send_sms } from '../services/sms';
 
 // const getDeviceNotificationReceivers = async (id) => {
 //     const device = await Device.find(id)
@@ -26,12 +26,14 @@ import Customer from '../models/Customer';
 
 export const postAlert = async (req: Request, res: Response) : Promise<Response> => {
    try{
-        const { serialNumber, type, severity, message, location} = req.body;
-
+        const { serialNumber, type, severity, message, location } = req.body;
         const device = await Device.findOne({serialNumber});
         if (!device) {
             return res.json(CreateResponse(false, null, `Device with id ${serialNumber} not found`));
         }
+
+        send_sms("Ndugu, Kuna Tembo Shambani.", device.listToBeNotified);
+
         const customerId = device.customerId;
         const customer_alert_updated = await Customer.findOneAndUpdate({_id: customerId}, {$push: {alerts: serialNumber}});
         if (!customer_alert_updated) {

@@ -13,7 +13,7 @@ export interface IDevice extends Document {
   location?: string
   batteryLevel?: number
   lastSeen?: Date
-  status: "active" | "inactive" | "maintenance"
+  status?: "active" | "inactive" | "maintenance"
   listToBeNotified?: IPersonToNotify[]
   createdAt: Date
   updatedAt: Date
